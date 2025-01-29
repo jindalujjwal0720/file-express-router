@@ -1,5 +1,5 @@
 {
-  "name": "fexpress",
+  "name": "file-express",
   "version": "1.0.0",
   "description": "a simple, unopinionated, and lightweight file based router for Express.js",
   "main": "./dist/index.js",

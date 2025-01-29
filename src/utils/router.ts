@@ -7,7 +7,7 @@ interface RouterOptions {
   dir: string;
 }
 
-const router = async (app: e.Express, options: RouterOptions) => {
+export const router = async (app: e.Express, options: RouterOptions) => {
   const router = e.Router();
   const entries = generateFileStructure(options.dir);
 
@@ -19,5 +19,3 @@ const router = async (app: e.Express, options: RouterOptions) => {
 
   app.use(options.base ?? '/', router);
 };
-
-export const fexpress = router;

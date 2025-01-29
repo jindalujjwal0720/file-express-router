@@ -1,3 +1,3 @@
-import { fexpress } from '../src/utils/router';
+import { router } from '../src/utils/router';
 
-export default fexpress;
+export default router;

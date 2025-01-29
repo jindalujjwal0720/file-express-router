@@ -1,5 +1,5 @@
 import express from 'express';
-import fexpress from 'fexpress';
+import { router } from './utils/router';
 import path from 'path';
 
 const createServer = async () => {
@@ -9,7 +9,7 @@ const createServer = async () => {
     res.send('Hello World!');
   });
 
-  await fexpress(app, {
+  await router(app, {
     base: '/api',
     dir: path.join(__dirname, 'dev-routes'),
   });
