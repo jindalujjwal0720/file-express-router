@@ -1,6 +1,6 @@
-# File Express
+# File Express Router
 
-File Express is a simple, unopinionated, fully typed, and lightweight file based router for Express.js. It allows you to create routes by simply creating files and folders in your project directory.
+File Express Router is a simple, unopinionated, fully typed, and lightweight file based router for Express.js. It allows you to create routes by simply creating files and folders in your project directory.
 
 ## Table of Contents
 
@@ -27,11 +27,11 @@ npm install file-express
 ## Features
 
 - **Simple**: Create routes by simply creating files and folders in your project directory.
-- **Unopinionated**: File Express does not enforce any specific structure for your routes.
-- **Fully Typed**: File Express is written in TypeScript and provides full type support.
-- **Lightweight**: File Express has no dependencies other than Express.js.
-- **Flexible**: File Express allows you to define routes using any HTTP method supported by Express.js.
-- **Custom handlers**: File Express allows you to define custom handlers for your routes, using `_handler` files.
+- **Unopinionated**: File Express Router does not enforce any specific structure for your routes.
+- **Fully Typed**: File Express Router is written in TypeScript and provides full type support.
+- **Lightweight**: File Express Router has no dependencies other than Express.js.
+- **Flexible**: File Express Router allows you to define routes using any HTTP method supported by Express.js.
+- **Custom handlers**: File Express Router allows you to define custom handlers for your routes, using `_handler` files.
 
 ## Usage
 
@@ -116,7 +116,7 @@ interface RouterOptions {
 
 ## Examples and tutorials
 
-In the following sections, we will provide examples and tutorials on how to use File Express to create routes in your Express.js application. We will cover everything from basic routes to more advanced topics like nested routes and custom handlers.
+In the following sections, we will provide examples and tutorials on how to use File Express Router to create routes in your Express.js application. We will cover everything from basic routes to more advanced topics like nested routes and custom handlers.
 
 ### Basic
 
