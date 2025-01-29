@@ -184,14 +184,13 @@ module.exports = {
 
 In this example, we will create a nested route that responds with the value of a URL parameter. Nested routes are created by placing route files in nested directories.
 
-````bash
+```bash
 routes/
     └── users/
         └── [id]/
             └── comments.js
         └── [id].js
-    ```
-````
+```
 
 ```javascript
 // routes/users/[id].js
