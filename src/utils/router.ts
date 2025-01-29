@@ -17,7 +17,7 @@ const router = async (app: e.Express, options: RouterOptions) => {
 
   await registerRoutes(router, entries);
 
-  app.use(options.base, router);
+  app.use(options.base ?? '/', router);
 };
 
 export const fexpress = router;
