@@ -21,7 +21,7 @@ File Express Router is a simple, unopinionated, fully typed, and lightweight fil
 ## Installation
 
 ```bash
-npm install file-express
+npm install file-express-router
 ```
 
 ## Features
@@ -40,7 +40,7 @@ npm install file-express
 ```javascript
 // app.js
 const express = require('express');
-const router = require('file-express');
+const router = require('file-express-router');
 
 const createApp = async () => {
   const app = express();
@@ -73,7 +73,7 @@ module.exports = {
 ```javascript
 // app.js
 import express from 'express';
-import router from 'file-express';
+import router from 'file-express-router';
 
 const createApp = async () => {
   const app = express();
