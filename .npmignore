@@ -1,0 +1,22 @@
+src
+packages
+node_modules
+npm-debug.log
+yarn-error.log
+yarn.lock
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+.tsconfig.json
+tsconfig.tsbuildinfo
+tsup.config.ts
+.eslintrc.json
+.prettierignore
+.prettierrc
+jest.config.ts
+eslint.config.mjs

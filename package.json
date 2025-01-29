@@ -1,0 +1,45 @@
+{
+  "name": "fexpress",
+  "version": "1.0.0",
+  "description": "a simple, unopinionated, and lightweight file based router for Express.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "jest --passWithNoTests",
+    "dev": "nodemon --exec ts-node src/index.ts"
+  },
+  "keywords": [
+    "express",
+    "router",
+    "file-based",
+    "simple"
+  ],
+  "author": "Ujjwal Jindal <jindalujjwal0720@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/compat": "^1.2.4",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "eslint": "^9.16.0",
+    "eslint-plugin-check-file": "^2.8.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "express": "^4.21.2",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0"
+  }
+}
