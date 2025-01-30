@@ -1,8 +1,0 @@
-{
-  "label": "Tutorials",
-  "position": 4,
-  "link": {
-    "type": "generated-index",
-    "description": "Learn how to use file-express-router."
-  }
-}
