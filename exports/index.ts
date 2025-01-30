@@ -1,3 +1,4 @@
-import { router } from '../src/utils/router';
+import { Router } from '../src/utils/router';
 
-export default router;
+export { Router };
+export default Router;
