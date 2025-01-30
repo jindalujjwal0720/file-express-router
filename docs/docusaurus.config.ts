@@ -59,7 +59,7 @@ const config: Config = {
       title: 'File Express Router',
       logo: {
         alt: 'File Express Router Logo',
-        src: 'img/logo.svg',
+        src: 'img/docusaurus.png',
       },
       items: [
         {
