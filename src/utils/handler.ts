@@ -1,19 +1,30 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { FileSystemEntry } from './files';
 
-const RESERVED_NAMES = ['_handler'];
+const RESERVED_FILE_NAMES = ['_middleware', '_error'];
 
-export type GlobalHandler = (
+enum RESERVED_FILE {
+  MIDDLEWARE = '_middleware',
+  ERROR = '_error',
+}
+
+export type Middleware = (
   req: Request,
   res: Response,
   next: NextFunction,
-  handler: () => void,
 ) => void;
 
-export const getGlobalHandler = async (source: string) => {
+export type ErrorMiddleware = (
+  error: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => void;
+
+export const getGenericHandler = async (source: string) => {
   if (!source) return undefined;
-  const handler = await import(source);
-  return handler.handler as GlobalHandler;
+  const fileExports = await import(source);
+  return fileExports.handler as Middleware | ErrorMiddleware;
 };
 
 export const isParameter = (segment: string): [boolean, string] => {
@@ -25,29 +36,13 @@ export const isParameter = (segment: string): [boolean, string] => {
   return [false, segment];
 };
 
-export const registerHandler = async (
-  router: Router,
-  method: 'get' | 'post' | 'put' | 'patch' | 'delete',
-  route: string,
-  handler: () => void,
-  globalHandler: GlobalHandler | undefined,
-) => {
-  if (!handler) return;
-  if (globalHandler) {
-    router[method](route, (req, res, next) => {
-      globalHandler(req, res, next, handler);
-    });
-  } else {
-    router[method](route, handler);
-  }
-};
-
 export const registerRoute = async (
   router: Router,
   entry: FileSystemEntry,
-  globalHandler: GlobalHandler | undefined,
+  preMiddleware: Middleware | undefined = undefined,
+  postMiddleware: Middleware | undefined = undefined,
 ) => {
-  if (RESERVED_NAMES.includes(entry.name)) {
+  if (RESERVED_FILE_NAMES.includes(entry.name)) {
     return;
   }
 
@@ -55,34 +50,81 @@ export const registerRoute = async (
   const route = isParam ? `/:${name}` : `/${entry.name}`;
 
   if (entry.type === 'directory') {
-    const childRouter = Router();
-    await registerRoutes(childRouter, entry.children, globalHandler);
+    const childRouter = Router({ mergeParams: true });
+    await registerRoutes(
+      childRouter,
+      entry.children,
+      preMiddleware,
+      postMiddleware,
+    );
     router.use(route, childRouter);
     return;
   }
 
-  const file = await import(entry.path);
-  const { get, post, put, patch, delete: del } = file;
+  const fileExports = await import(entry.path);
+  const { get, post, put, patch, delete: del, middleware } = fileExports;
 
-  await registerHandler(router, 'get', route, get, globalHandler);
-  await registerHandler(router, 'post', route, post, globalHandler);
-  await registerHandler(router, 'put', route, put, globalHandler);
-  await registerHandler(router, 'patch', route, patch, globalHandler);
-  await registerHandler(router, 'delete', route, del, globalHandler);
+  // register pre middlewares
+  if (preMiddleware) router.use(preMiddleware);
+  if (middleware) router.use(middleware);
+
+  const handlers = [
+    { method: 'get', handler: get },
+    { method: 'post', handler: post },
+    { method: 'put', handler: put },
+    { method: 'patch', handler: patch },
+    { method: 'delete', handler: del },
+  ] as const;
+  handlers.forEach(({ method, handler }) => {
+    if (handler) {
+      router[method](route, handler);
+    }
+  });
+
+  // register post middlewares
+  if (postMiddleware) router.use(postMiddleware);
 };
 
 export const registerRoutes = async (
   router: Router,
   entries: FileSystemEntry[],
-  rootHandler?: GlobalHandler,
+  preMiddleware: Middleware | undefined = undefined,
+  postMiddleware: Middleware | undefined = undefined,
 ) => {
-  const globalHandlerSource = entries.find(
-    (entry) => entry.name === '_handler',
+  // check if there is a middleware file
+  const middlewareEntry = entries.find(
+    (entry) => entry.name === RESERVED_FILE.MIDDLEWARE && entry.type === 'file',
   );
-  const globalHandler =
-    (await getGlobalHandler(globalHandlerSource?.path ?? '')) ?? rootHandler;
+  const localMiddleware = (await getGenericHandler(
+    middlewareEntry?.path || '',
+  )) as Middleware;
 
+  // register pre middlewares
+  if (preMiddleware) router.use(preMiddleware);
+  if (localMiddleware) router.use(localMiddleware);
+
+  // register routes
   for (const entry of entries) {
-    await registerRoute(router, entry, globalHandler);
+    if (RESERVED_FILE_NAMES.includes(entry.name)) {
+      continue;
+    }
+    await registerRoute(router, entry);
+  }
+
+  // register post middlewares
+  if (postMiddleware) router.use(postMiddleware);
+
+  // check if there is an error middleware file
+  const errorEntry = entries.find(
+    (entry) => entry.name === RESERVED_FILE.ERROR && entry.type === 'file',
+  );
+  const errorMiddleware = (await getGenericHandler(
+    errorEntry?.path || '',
+  )) as ErrorMiddleware;
+  if (errorMiddleware) {
+    router.use(
+      (error: Error, req: Request, res: Response, next: NextFunction) =>
+        errorMiddleware(error, req, res, next),
+    );
   }
 };

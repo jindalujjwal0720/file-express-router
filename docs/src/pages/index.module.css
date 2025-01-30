@@ -1,0 +1,157 @@
+/* Hero Section */
+.heroBanner {
+  padding: 4rem 0;
+  background: var(--ifm-background-color);
+}
+
+.heroContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.heroContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  width: 100%;
+}
+
+.heroTitle {
+  font-size: 2.75rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.heroSubtitle {
+  display: block;
+  color: var(--ifm-color-primary);
+  font-size: 1.25em;
+  margin-top: 0.5rem;
+}
+
+.heroDescription {
+  font-size: 1.1rem;
+  color: var(--ifm-font-color-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* CTA Buttons */
+.ctaGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.ctaMain {
+  background: var(--ifm-color-primary);
+  border: none;
+  transition: transform 0.2s ease;
+}
+
+.ctaMain:hover {
+  transform: translateY(-2px);
+  background: var(--ifm-color-primary);
+}
+
+.ctaSecondary {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+}
+
+.ctaSecondary:hover {
+  outline: 1px solid var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+}
+
+/* Code Preview */
+.codePreview {
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  text-align: left;
+  width: 100%;
+}
+
+.codeWindow {
+  background: var(--ifm-background-surface-color);
+  width: 100%;
+}
+
+.codeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.codeContent {
+  width: 100%;
+  max-width: 100%;
+  padding: 1.5rem;
+  margin: 0;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-color-emphasis-800);
+}
+
+.windowControls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.windowControls span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.controlClose {
+  background: #ff5f56;
+}
+.controlMinimize {
+  background: #ffbd2e;
+}
+.controlExpand {
+  background: #27c93f;
+}
+
+.fileName {
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+@media (max-width: 996px) {
+  .heroContent {
+    gap: 3rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+  }
+
+  .ctaGroup {
+    justify-content: center;
+  }
+
+  .codePreview {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+  }
+}

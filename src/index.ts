@@ -1,5 +1,5 @@
 import express from 'express';
-import { router } from './utils/router';
+import { Router } from './utils/router';
 import path from 'path';
 
 const createServer = async () => {
@@ -9,10 +9,11 @@ const createServer = async () => {
     res.send('Hello World!');
   });
 
-  await router(app, {
-    base: '/api',
+  const router = await Router({
     dir: path.join(__dirname, 'dev-routes'),
+    logger: true,
   });
+  app.use('/api', router);
 
   app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');

@@ -1,21 +1,40 @@
-import * as e from 'express';
 import { generateFileStructure } from './files';
 import { registerRoutes } from './handler';
+import { blue, green } from './logs';
+import express from 'express';
 
 interface RouterOptions {
-  base: string;
   dir: string;
+  logger?: boolean;
 }
 
-export const router = async (app: e.Express, options: RouterOptions) => {
-  const router = e.Router();
-  const entries = generateFileStructure(options.dir);
+export let GLOBAL_OPTIONS = {
+  dir: '',
+  logger: true,
+};
 
-  router.get('/', (req, res) => {
-    res.json(entries);
-  });
+export const Router = async (options: RouterOptions) => {
+  const start = Date.now();
+  GLOBAL_OPTIONS = { ...GLOBAL_OPTIONS, ...options };
+
+  const entries = generateFileStructure(options.dir);
+  const router = express.Router();
+
+  if (GLOBAL_OPTIONS.logger) {
+    router.use((req, _res, next) => {
+      console.log(blue(`[file-express-router]`), green(req.method), req.path);
+      next();
+    });
+  }
 
   await registerRoutes(router, entries);
 
-  app.use(options.base ?? '/', router);
+  if (GLOBAL_OPTIONS.logger) {
+    console.log(
+      blue(`[file-express-router]`),
+      `Router loaded in ${Date.now() - start}ms`,
+    );
+  }
+
+  return router;
 };

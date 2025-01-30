@@ -1,5 +1,14 @@
-import { HandlerFunction } from './_handler';
+import { Request, Response, NextFunction } from 'express';
 
-export const get: HandlerFunction = async (params) => {
-  return params;
+const handleGetUser = async (
+  req: Request & { user: unknown },
+  res: Response,
+  next: NextFunction,
+) => {
+  const { id } = req.params;
+  const { user } = req;
+
+  next({ id, user });
 };
+
+export const get = handleGetUser;
