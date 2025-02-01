@@ -65,7 +65,12 @@
 }
 
 @media (max-width: 996px) {
+  .features {
+    padding: 2rem 0;
+  }
+
   .featureGrid {
+    padding: 0;
     grid-template-columns: 1fr;
     max-width: 600px;
   }

@@ -191,4 +191,4 @@ basic-api-server/
 └── tsconfig.json (if using TypeScript)
 ```
 
-You’ve now built a **basic API server** using **File Express Router**! In the next tutorial, we’ll dive into **authentication systems**. Let me know if you’re ready to proceed!
+You’ve now built a **basic API server** using **File Express Router**!
