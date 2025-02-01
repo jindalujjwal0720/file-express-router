@@ -47,7 +47,7 @@ export const registerRoute = async (
   }
 
   const [isParam, name] = isParameter(entry.name);
-  const route = isParam ? `/:${name}` : `/${entry.name}`;
+  let route = isParam ? `/:${name}` : `/${entry.name}`;
 
   if (entry.type === 'directory') {
     const childRouter = Router({ mergeParams: true });
@@ -67,6 +67,9 @@ export const registerRoute = async (
   // register pre middlewares
   if (preMiddleware) router.use(preMiddleware);
   if (middleware) router.use(middleware);
+
+  // handle index routes
+  if (name === 'index') route = '/';
 
   const handlers = [
     { method: 'get', handler: get },

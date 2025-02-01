@@ -1,6 +1,6 @@
 {
   "name": "file-express-router",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "a simple, unopinionated, and lightweight file based router for Express.js",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
