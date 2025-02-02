@@ -10,7 +10,7 @@ Read more about File Express Router in the [documentation](https://jindalujjwal0
 
 ## License
 
-MIT © [Ujjwal Jindal](LICENSE)
+[MIT](LICENSE)
 
 ## Contributing
 
