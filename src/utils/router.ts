@@ -1,7 +1,7 @@
 import { generateFileStructure } from './files';
 import { registerRoutes } from './handler';
 import { blue, green } from './logs';
-import express from 'express';
+import { Router as ExpressRouter } from 'express';
 
 interface RouterOptions {
   dir: string;
@@ -18,7 +18,7 @@ export const Router = async (options: RouterOptions) => {
   GLOBAL_OPTIONS = { ...GLOBAL_OPTIONS, ...options };
 
   const entries = generateFileStructure(options.dir);
-  const router = express.Router();
+  const router = ExpressRouter();
 
   if (GLOBAL_OPTIONS.logger) {
     router.use((req, _res, next) => {
@@ -29,12 +29,10 @@ export const Router = async (options: RouterOptions) => {
 
   await registerRoutes(router, entries);
 
-  if (GLOBAL_OPTIONS.logger) {
-    console.log(
-      blue(`[file-express-router]`),
-      `Router loaded in ${Date.now() - start}ms`,
-    );
-  }
+  console.log(
+    blue(`[file-express-router]`),
+    `Router loaded in ${Date.now() - start}ms`,
+  );
 
   return router;
 };
