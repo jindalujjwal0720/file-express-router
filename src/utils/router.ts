@@ -25,7 +25,7 @@ export let GLOBAL_OPTIONS: RouterOptions = {
   include: ['.ts', '.js'],
 };
 
-export const Router = async (options: Partial<RouterOptions>) => {
+export const Router = async (options: RouterOptions) => {
   const start = Date.now();
   GLOBAL_OPTIONS = { ...GLOBAL_OPTIONS, ...options };
 

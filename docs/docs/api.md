@@ -10,6 +10,7 @@ The **Router** function is the main entry point for the library. It initializes 
   - `options` (object)
     - `dir` (string) **Required**: The root directory where route files are located.
     - `logger` (boolean) **Optional**: A flag to enable or disable logging. Default is `true`.
+    - `include` (string[]) **Optional**: An array of file extensions to include when searching for route files. Default is `['.js', '.ts']`.
 
 ## Configuration Options
 
@@ -27,3 +28,11 @@ The **Router** function accepts an object with the following configuration optio
 - **Type**: `boolean`
 - **Default**: `true`
 - **Description**: A flag to enable or disable logging. When set to `true`, the router will log information about registered routes and middleware.
+
+### include
+
+- **Required**: No
+- **Type**: `string[]`
+- **Default**: `['.js', '.ts']`
+- **Description**: An array of file extensions to include when searching for route files. By default, the router will only include `.js` and `.ts` files.
+- **Allowed Values**: `['.js', '.ts']`
