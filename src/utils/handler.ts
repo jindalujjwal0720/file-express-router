@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { ErrorRequestHandler, RequestHandler, Router } from 'express';
 import { FileSystemEntry } from './files';
 
 const RESERVED_FILE_NAMES = ['_middleware', '_error'];
@@ -8,23 +8,15 @@ enum RESERVED_FILE {
   ERROR = '_error',
 }
 
-export type Middleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => void;
-
-export type ErrorMiddleware = (
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => void;
-
 export const getGenericHandler = async (source: string) => {
   if (!source) return undefined;
   const fileExports = await import(source);
-  return fileExports.handler as Middleware | ErrorMiddleware;
+  return fileExports.handler as
+    | RequestHandler
+    | ErrorRequestHandler
+    | RequestHandler[]
+    | ErrorRequestHandler[]
+    | undefined;
 };
 
 export const isParameter = (segment: string): [boolean, string] => {
@@ -39,8 +31,8 @@ export const isParameter = (segment: string): [boolean, string] => {
 export const registerRoute = async (
   router: Router,
   entry: FileSystemEntry,
-  preMiddleware: Middleware | undefined = undefined,
-  postMiddleware: Middleware | undefined = undefined,
+  preMiddleware: RequestHandler | RequestHandler[] | undefined = undefined,
+  postMiddleware: RequestHandler | RequestHandler[] | undefined = undefined,
 ) => {
   if (RESERVED_FILE_NAMES.includes(entry.name)) {
     return;
@@ -62,7 +54,7 @@ export const registerRoute = async (
   }
 
   const fileExports = await import(entry.path);
-  const { get, post, put, patch, delete: del, middleware } = fileExports;
+  const { get, post, put, patch, del, middleware } = fileExports;
 
   // register pre middlewares
   if (preMiddleware) router.use(preMiddleware);
@@ -91,8 +83,8 @@ export const registerRoute = async (
 export const registerRoutes = async (
   router: Router,
   entries: FileSystemEntry[],
-  preMiddleware: Middleware | undefined = undefined,
-  postMiddleware: Middleware | undefined = undefined,
+  preMiddleware: RequestHandler | RequestHandler[] | undefined = undefined,
+  postMiddleware: RequestHandler | RequestHandler[] | undefined = undefined,
 ) => {
   // check if there is a middleware file
   const middlewareEntry = entries.find(
@@ -100,7 +92,7 @@ export const registerRoutes = async (
   );
   const localMiddleware = (await getGenericHandler(
     middlewareEntry?.path || '',
-  )) as Middleware;
+  )) as RequestHandler;
 
   // register pre middlewares
   if (preMiddleware) router.use(preMiddleware);
@@ -123,11 +115,6 @@ export const registerRoutes = async (
   );
   const errorMiddleware = (await getGenericHandler(
     errorEntry?.path || '',
-  )) as ErrorMiddleware;
-  if (errorMiddleware) {
-    router.use(
-      (error: Error, req: Request, res: Response, next: NextFunction) =>
-        errorMiddleware(error, req, res, next),
-    );
-  }
+  )) as ErrorRequestHandler;
+  if (errorMiddleware) router.use(errorMiddleware);
 };

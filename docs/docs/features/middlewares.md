@@ -45,6 +45,28 @@ export const handler = (err, req, res, next) => {
 
 **Note:** Error middleware is defined in a `_error.ts` file and is executed when an error is passed to the `next()` function. If the error is normally thrown, it will not be caught by the error middleware. Error middleware only runs when `next(err)` is called within a route or another middleware.
 
+## Multiple Middleware
+
+You can apply multiple middleware functions to a route by defining an array of middleware functions in the `middleware` property of the route file or `handler` property of the directory middleware file. Middleware functions are executed in the order they are defined.
+
+Example:
+
+```ts title="routes/users/[id].ts"
+const authenticate = (req, res, next) => {
+  console.log('Authenticating user...');
+  next();
+};
+
+const authorize = (req, res, next) => {
+  console.log('Authorizing user...');
+  next();
+};
+
+export const middleware = [authenticate, authorize];
+```
+
+In this example, the `authenticate` middleware function is executed first, followed by the `authorize` middleware function. This allows you to define a sequence of middleware functions to process requests in the desired order.
+
 ## Middleware Ordering
 
 The order in which middleware is applied is crucial, as it determines the flow of execution. In `file-express-router`, middleware is executed in the order it is defined. Make sure to define middleware in the correct sequence to avoid unexpected behavior.
