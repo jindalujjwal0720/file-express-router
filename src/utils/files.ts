@@ -1,5 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import { GLOBAL_OPTIONS } from './router';
+
+export const ALLOWED_EXTENSIONS = ['.ts', '.js'];
+
+export enum ALLOWED_EXTENSION {
+  JS = '.js',
+  TS = '.ts',
+}
 
 export interface File {
   type: 'file';
@@ -11,6 +19,10 @@ export interface File {
    * The absolute path to the file.
    */
   path: string;
+  /**
+   * The extension of the file.
+   */
+  extension: ALLOWED_EXTENSION;
 }
 
 export interface Directory {
@@ -43,11 +55,19 @@ export const generateFileStructure = (
   name = name ?? getFileName(sourcePath);
 
   if (stats.isFile()) {
+    const ext = path.extname(sourcePath);
+    if (
+      !GLOBAL_OPTIONS.include?.includes(ext) ||
+      !ALLOWED_EXTENSIONS.includes(ext)
+    ) {
+      return [];
+    }
     return [
       {
         type: 'file',
         name,
         path: sourcePath,
+        extension: ext as ALLOWED_EXTENSION,
       },
     ];
   }
@@ -60,10 +80,19 @@ export const generateFileStructure = (
     const childStats = fs.statSync(childPath);
 
     if (childStats.isFile()) {
+      const ext = path.extname(childPath);
+      if (
+        !GLOBAL_OPTIONS.include?.includes(ext) ||
+        !ALLOWED_EXTENSIONS.includes(ext)
+      ) {
+        continue;
+      }
+
       entries.push({
         type: 'file',
         name: getFileName(child),
         path: childPath,
+        extension: ext as ALLOWED_EXTENSION,
       });
     } else {
       entries.push({

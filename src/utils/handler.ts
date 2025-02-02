@@ -1,5 +1,5 @@
 import { ErrorRequestHandler, RequestHandler, Router } from 'express';
-import { FileSystemEntry } from './files';
+import { ALLOWED_EXTENSION, FileSystemEntry } from './files';
 
 const RESERVED_FILE_NAMES = ['_middleware', '_error'];
 
@@ -50,6 +50,14 @@ export const registerRoute = async (
       postMiddleware,
     );
     router.use(route, childRouter);
+    return;
+  }
+
+  // check if the file is a javascript or typescript file
+  if (
+    entry.extension !== ALLOWED_EXTENSION.JS &&
+    entry.extension !== ALLOWED_EXTENSION.TS
+  ) {
     return;
   }
 

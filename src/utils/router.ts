@@ -4,20 +4,32 @@ import { blue, green } from './logs';
 import { Router as ExpressRouter } from 'express';
 
 interface RouterOptions {
+  /**
+   * The directory to load the routes from.
+   */
   dir: string;
+  /**
+   * Whether to log requests or not.
+   */
   logger?: boolean;
+  /**
+   * Allowed file extensions to load as routes.
+   * @default ['.ts', '.js']
+   */
+  include?: string[];
 }
 
-export let GLOBAL_OPTIONS = {
+export let GLOBAL_OPTIONS: RouterOptions = {
   dir: '',
   logger: true,
+  include: ['.ts', '.js'],
 };
 
-export const Router = async (options: RouterOptions) => {
+export const Router = async (options: Partial<RouterOptions>) => {
   const start = Date.now();
   GLOBAL_OPTIONS = { ...GLOBAL_OPTIONS, ...options };
 
-  const entries = generateFileStructure(options.dir);
+  const entries = generateFileStructure(GLOBAL_OPTIONS.dir);
   const router = ExpressRouter();
 
   if (GLOBAL_OPTIONS.logger) {
