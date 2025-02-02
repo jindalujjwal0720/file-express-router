@@ -25,7 +25,7 @@ You can define handlers for the following HTTP methods:
 - **GET**
 - **POST**
 - **PUT**
-- **DELETE**
+- **DELETE** (use `del` as an alias as `delete` is a reserved keyword)
 - **PATCH**
 
 Each handler corresponds to a specific HTTP request type, which helps to keep the logic for each type of operation well-defined and separate.
@@ -45,7 +45,8 @@ export const put = (req, res) => {
   res.json({ updated: true, id });
 };
 
-export const delete = (req, res) => {
+// Alias for DELETE method
+export const del = (req, res) => {
   const { id } = req.params;
   res.json({ deleted: true, id });
 };
