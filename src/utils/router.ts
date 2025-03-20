@@ -1,7 +1,7 @@
-import { generateFileStructure } from './files';
-import { registerRoutes } from './handler';
-import { blue, green } from './logs';
+import { generateFolderStructure } from './files';
+import { green, logger } from './logs';
 import { Router as ExpressRouter } from 'express';
+import { generateRouter } from './main';
 
 interface RouterOptions {
   /**
@@ -17,34 +17,74 @@ interface RouterOptions {
    * @default ['.ts', '.js']
    */
   include?: string[];
+  /**
+   * Router file generation options.
+   * @default { require: false, ts: false }
+   */
+  router?: {
+    /**
+     * The base path for the router.
+     * @default '/api'
+     */
+    base?: string;
+    /**
+     * Whether to use require instead of import.
+     * @default false
+     */
+    require?: boolean;
+    /**
+     * Whether to generate TypeScript code.
+     * @default false
+     */
+    ts?: boolean;
+  };
 }
 
 export let GLOBAL_OPTIONS: RouterOptions = {
   dir: '',
   logger: true,
   include: ['.ts', '.js'],
+  router: {
+    base: '/api',
+    require: false,
+    ts: false,
+  },
 };
 
 export const Router = async (options: RouterOptions) => {
-  const start = Date.now();
-  GLOBAL_OPTIONS = { ...GLOBAL_OPTIONS, ...options };
-
-  const entries = generateFileStructure(GLOBAL_OPTIONS.dir);
+  GLOBAL_OPTIONS = {
+    ...GLOBAL_OPTIONS,
+    ...options,
+    router: { ...GLOBAL_OPTIONS.router, ...options.router },
+  };
   const router = ExpressRouter();
 
   if (GLOBAL_OPTIONS.logger) {
-    router.use((req, _res, next) => {
-      console.log(blue(`[file-express-router]`), green(req.method), req.path);
+    logger.enable();
+    logger.log('Logger enabled');
+    router.use((req, res, next) => {
+      logger.log(green(req.method), req.path);
       next();
     });
   }
 
-  await registerRoutes(router, entries);
+  logger.startTimer('Folder structure generation');
+  const entries = await generateFolderStructure(GLOBAL_OPTIONS.dir);
+  logger.logTimer('Folder structure generation');
 
-  console.log(
-    blue(`[file-express-router]`),
-    `Router loaded in ${Date.now() - start}ms`,
-  );
+  if (GLOBAL_OPTIONS.include?.includes('.js')) {
+    logger.warn(
+      'For using JavaScript files, make sure to set the `allowJs` option in your tsconfig.json',
+    );
+  }
+
+  // Take these routes and register them with the router.
+  // This is where the magic happens.
+  logger.startTimer('Router generation');
+  const apiRouter = await generateRouter(entries);
+  logger.logTimer('Router generation');
+
+  router.use(apiRouter);
 
   return router;
 };

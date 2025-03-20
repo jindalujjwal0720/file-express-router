@@ -14,7 +14,7 @@
   "scripts": {
     "build": "tsup",
     "test": "jest --passWithNoTests",
-    "dev": "nodemon --exec ts-node src/index.ts"
+    "dev": "nodemon --ignore src/dev-routes --exec ts-node src/index.ts"
   },
   "keywords": [
     "express",

@@ -1,5 +1,5 @@
 const get = (req, res) => {
-  res.send('Only JS file is allowed');
+  res.send('JS file is also allowed');
 };
 
 module.exports = { get };

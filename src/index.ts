@@ -12,7 +12,8 @@ const createServer = async () => {
   const router = await Router({
     dir: path.join(__dirname, 'dev-routes'),
     logger: true,
-    include: ['.js'],
+    include: ['.ts'],
+    router: { ts: true },
   });
   app.use('/api', router);
 
