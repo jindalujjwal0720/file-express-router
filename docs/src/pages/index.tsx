@@ -59,12 +59,12 @@ function HomepageHeader() {
                   <span className={styles.controlMinimize}></span>
                   <span className={styles.controlExpand}></span>
                 </div>
-                <span className={styles.fileName}>routes/user/[id].ts</span>
+                <span className={styles.fileName}>routes/user/[id].get.ts</span>
               </div>
               <pre className={styles.codeContent}>
                 <code>
                   {`import { RequestHandler } from 'express';\n\n`}
-                  {`export const get: RequestHandler = (req, res) => {\n`}
+                  {`export const handler: RequestHandler = (req, res) => {\n`}
                   {`  res.json({ userId: req.params.id });\n`}
                   {`};`}
                 </code>

@@ -24,7 +24,9 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         Automatic route mapping from directory structure
-        <code className={styles.code}>routes/users/[id].ts → /users/:id</code>
+        <code className={styles.code}>
+          routes/users/[id].get.ts → /users/:id
+        </code>
       </>
     ),
   },
@@ -46,7 +48,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         File/directory-level middleware handling
-        <code className={styles.code}>_middleware.ts</code>
+        <code className={styles.code}>index.middleware.ts</code>
       </>
     ),
   },
@@ -90,7 +92,9 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         TypeScript-first architecture
-        <code className={styles.code}>export const get: RequestHandler</code>
+        <code className={styles.code}>
+          export const handler: RequestHandler
+        </code>
       </>
     ),
   },
@@ -112,7 +116,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         Centralized error handling
-        <code className={styles.code}>_error.ts</code>
+        <code className={styles.code}>index.error.ts</code>
       </>
     ),
   },
@@ -135,7 +139,7 @@ const FeatureList: FeatureItem[] = [
       <>
         Native method handlers
         <code className={styles.code}>
-          export const get/post/put/patch/delete
+          GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD ...
         </code>
       </>
     ),
