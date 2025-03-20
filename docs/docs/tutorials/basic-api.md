@@ -55,9 +55,9 @@ Create the following folder structure:
 ```
 basic-api-server/
 ├── routes/
-│   ├── index.ts
+│   ├── index.get.ts
 │   └── users/
-│       └── [id].ts
+│       └── [id].get.ts
 ├── app.ts
 ├── package.json
 └── tsconfig.json (if using TypeScript)
@@ -84,7 +84,7 @@ const startServer = async () => {
   app.use('/api', router);
 
   // Start the server
-  const PORT = 3000;
+  const PORT = 6969;
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
@@ -95,12 +95,12 @@ startServer();
 
 ### Step 4: Create Your First Route
 
-Inside the `routes` directory, create an `index.ts` file with a simple route:
+Inside the `routes` directory, create an `index.get.ts` file with a simple route:
 
-```typescript
+```typescript title="routes/index.get.ts"
 import { RequestHandler } from 'express';
 
-export const get: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (req, res) => {
   res.json({ message: 'Welcome to the Basic API Server!' });
 };
 ```
@@ -109,12 +109,12 @@ This will handle `GET` requests to `/api/`.
 
 ### Step 5: Add a Dynamic Route
 
-Inside the `routes/users` directory, create a `[id].ts` file to handle dynamic parameters:
+Inside the `routes/users` directory, create a `[id].get.ts` file to handle dynamic parameters:
 
-```typescript
+```typescript title="routes/users/[id].get.ts"
 import { RequestHandler } from 'express';
 
-export const get: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (req, res) => {
   res.json({ userId: req.params.id });
 };
 ```
@@ -132,11 +132,11 @@ npx ts-node app.ts
 ### Step 7: Test Your API
 
 1. Open your browser or use a tool like **Postman** or **curl**.
-2. Visit `http://localhost:3000/api/` to see the response from the `index.ts` route:
+2. Visit `http://localhost:6969/api/` to see the response from the `index.ts` route:
    ```json
    { "message": "Welcome to the Basic API Server!" }
    ```
-3. Visit `http://localhost:3000/api/users/123` to test the dynamic route:
+3. Visit `http://localhost:6969/api/users/123` to test the dynamic route:
    ```json
    { "userId": "123" }
    ```
@@ -145,18 +145,18 @@ npx ts-node app.ts
 
 You can now add more routes by creating files in the `routes` directory. For example:
 
-- `routes/posts/index.ts` → `/api/posts`
-- `routes/posts/[slug].ts` → `/api/posts/:slug`
-- `routes/admin/dashboard.ts` → `/api/admin/dashboard`
+- `routes/posts/index.get.ts` → `GET /api/posts`
+- `routes/posts/[slug].get.ts` → `GET /api/posts/:slug`
+- `routes/admin/dashboard.get.ts` → `GET /api/admin/dashboard`
 
 ### Step 9: Add Middleware (Optional)
 
-To add middleware, create a `_middleware.ts` file in any directory. For example, in `routes/users/_middleware.ts`:
+To add middleware, create a `index.middleware.ts` file in any directory. For example, in `routes/users/index.middleware.ts`:
 
-```typescript
+```typescript title="routes/users/index.middleware.ts"
 import { RequestHandler } from 'express';
 
-export const middleware: RequestHandler = (req, res, next) => {
+export const handler: RequestHandler = (req, res, next) => {
   console.log('Middleware running for /api/users routes');
   next();
 };
@@ -166,9 +166,9 @@ This middleware will run for all routes under `/api/users`.
 
 ### Step 10: Add Error Handling (Optional)
 
-To handle errors, create an `_error.ts` file in any directory. For example, in `routes/_error.ts`:
+To handle errors, create an `index.error.ts` file in any directory. For example, in `routes/index.error.ts`:
 
-```typescript
+```typescript title="routes/index.error.ts"
 import { ErrorRequestHandler } from 'express';
 
 export const handler: ErrorRequestHandler = (err, req, res, next) => {
@@ -181,11 +181,11 @@ export const handler: ErrorRequestHandler = (err, req, res, next) => {
 ```
 basic-api-server/
 ├── routes/
-│   ├── index.ts
+│   ├── index.get.ts
 │   ├── users/
-│   │   ├── [id].ts
-│   │   └── _middleware.ts
-│   └── _error.ts
+│   │   ├── [id].get.ts
+│   │   └── index.middleware.ts
+│   └── index.error.ts
 ├── app.ts
 ├── package.json
 └── tsconfig.json (if using TypeScript)

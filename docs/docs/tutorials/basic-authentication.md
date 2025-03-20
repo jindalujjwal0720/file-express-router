@@ -17,7 +17,7 @@ Before starting, ensure you have the following installed:
 
 ### Step 1: Install Additional Dependencies
 
-We’ll use the following packages for authentication:
+We'll use the following packages for authentication:
 
 1. **jsonwebtoken**: For generating and verifying JWTs.
 2. **bcrypt**: For hashing passwords.
@@ -34,10 +34,9 @@ npm install --save-dev @types/jsonwebtoken @types/bcrypt
 
 Create a `.env` file in the root of your project to store sensitive information:
 
-```env
-# .env
+```env title=".env"
 JWT_SECRET=your_jwt_secret_key
-PORT=3000
+PORT=6969
 ```
 
 ### Step 3: Update Project Structure
@@ -48,16 +47,15 @@ Update your project structure to include authentication-related files:
 basic-api-server/
 ├── routes/
 │   ├── auth/
-│   │   ├── register.ts
-│   │   ├── login.ts
+│   │   ├── register.post.ts
+│   │   ├── login.post.ts
+│   └── index.error.ts
+│   ├── index.get.ts
 │   ├── users/
-│   │   └── [id].ts
-│   ├── index.ts
-│   └── _error.ts
-├── middlewares/
-│   └── authMiddleware.ts
+│   │   ├── auth.middleware.ts
+│   │   └── [id].get.ts
 ├── utils/
-│   └── authUtils.ts
+│   └── auth.ts
 ├── app.ts
 ├── .env
 ├── package.json
@@ -66,9 +64,9 @@ basic-api-server/
 
 ### Step 4: Create Utility Functions
 
-In the `utils/authUtils.ts` file, add helper functions for hashing passwords and generating JWTs:
+In the `utils/auth.ts` file, add helper functions for hashing passwords and generating JWTs:
 
-```typescript title="utils/authUtils.ts"
+```typescript title="utils/auth.ts"
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -108,11 +106,11 @@ export const verifyToken = (token: string): { userId: string } | null => {
 
 ### Step 5: Create Authentication Middleware
 
-```typescript title="middlewares/authMiddleware.ts"
+```typescript title="routes/users/auth.middleware.ts"
 import { RequestHandler } from 'express';
-import { verifyToken } from '../utils/authUtils';
+import { verifyToken } from '../../utils/auth';
 
-export const authMiddleware: RequestHandler = (req, res, next) => {
+export const handler: RequestHandler = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
@@ -133,14 +131,14 @@ export const authMiddleware: RequestHandler = (req, res, next) => {
 
 ### Step 6: Create Authentication Routes
 
-```typescript title="routes/auth/register.ts"
+```typescript title="routes/auth/register.post.ts"
 import { RequestHandler } from 'express';
-import { hashPassword } from '../../utils/authUtils';
+import { hashPassword } from '../../utils/auth';
 
 // In-memory "database" for demonstration purposes
 const users: { [key: string]: { password: string } } = {};
 
-export const post: RequestHandler = async (req, res) => {
+export const handler: RequestHandler = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -160,7 +158,7 @@ export const post: RequestHandler = async (req, res) => {
 };
 ```
 
-```typescript title="routes/auth/login.ts"
+```typescript title="routes/auth/login.post.ts"
 import { RequestHandler } from 'express';
 import { comparePassword, generateToken } from '../../utils/authUtils';
 
@@ -169,7 +167,7 @@ const users: { [key: string]: { password: string } } = {
   admin: { password: '$2b$10$...' }, // Replace with a real hashed password
 };
 
-export const post: RequestHandler = async (req, res) => {
+export const handler: RequestHandler = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -189,22 +187,7 @@ export const post: RequestHandler = async (req, res) => {
 };
 ```
 
-### Step 7: Protect Routes
-
-To protect a route, use the `authMiddleware`. For example, update the `routes/users/[id].ts` file:
-
-```typescript title="routes/users/[id].ts"
-import { RequestHandler } from 'express';
-import { authMiddleware } from '../../middlewares/authMiddleware';
-
-export const middleware = authMiddleware;
-
-export const get: RequestHandler = (req, res) => {
-  res.json({ userId: req.params.id, currentUser: req.userId });
-};
-```
-
-### Step 8: Update app.ts
+### Step 7: Update app.ts
 
 Update your `app.ts` file to use JSON body parsing and environment variables:
 
@@ -227,7 +210,7 @@ const startServer = async () => {
   const router = await Router({ dir: routesDir });
   app.use('/api', router);
 
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 6969;
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
@@ -247,7 +230,7 @@ startServer();
 2. Register a new user:
 
    ```bash
-   curl -X POST http://localhost:3000/api/auth/register \
+   curl -X POST http://localhost:6969/api/auth/register \
    -H "Content-Type: application/json" \
    -d '{"username": "admin", "password": "password123"}'
    ```
@@ -255,7 +238,7 @@ startServer();
 3. Log in to get a token:
 
    ```bash
-   curl -X POST http://localhost:3000/api/auth/login \
+   curl -X POST http://localhost:6969/api/auth/login \
    -H "Content-Type: application/json" \
    -d '{"username": "admin", "password": "password123"}'
    ```
@@ -263,7 +246,7 @@ startServer();
 4. Access a protected route using the token:
 
    ```bash
-   curl http://localhost:3000/api/users/123 \
+   curl http://localhost:6969/api/users/123 \
    -H "Authorization: Bearer <your_token>"
    ```
 
@@ -273,16 +256,15 @@ startServer();
 basic-api-server/
 ├── routes/
 │   ├── auth/
-│   │   ├── register.ts
-│   │   ├── login.ts
+│   │   ├── register.post.ts
+│   │   ├── login.post.ts
+│   └── index.error.ts
+│   ├── index.get.ts
 │   ├── users/
-│   │   └── [id].ts
-│   ├── index.ts
-│   └── _error.ts
-├── middlewares/
-│   └── authMiddleware.ts
+│   │   ├── auth.middleware.ts
+│   │   └── [id].get.ts
 ├── utils/
-│   └── authUtils.ts
+│   └── auth.ts
 ├── app.ts
 ├── .env
 ├── package.json

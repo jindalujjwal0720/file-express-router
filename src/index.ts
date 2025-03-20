@@ -11,14 +11,11 @@ const createServer = async () => {
 
   const router = await Router({
     dir: path.join(__dirname, 'dev-routes'),
-    logger: true,
-    include: ['.ts'],
-    router: { ts: true },
   });
   app.use('/api', router);
 
-  app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+  app.listen(6969, () => {
+    console.log('Server is running on http://localhost:6969');
   });
 };
 

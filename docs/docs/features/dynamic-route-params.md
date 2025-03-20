@@ -9,13 +9,14 @@ A single dynamic parameter is represented using square brackets (`[]`). The valu
 ```bash
 routes/
 ├── users/
-│   ├── [id].ts   →  GET /users/:id
+│   ├── [id].get.ts   →  GET /users/:id
 └── products/
-    ├── [slug].ts →  GET /products/:slug
+    ├── [slug].get.ts →  GET /products/:slug
+    ├── [slug].post.ts →  POST /products/:slug
 ```
 
-```ts title="routes/users/[id].ts"
-export const get = (req, res) => {
+```ts title="routes/users/[id].get.ts"
+export const handler = (req, res) => {
   const { id } = req.params;
   res.json({ userId: id });
 };
@@ -28,11 +29,11 @@ You can define multiple parameters within the same route using multiple brackete
 ```bash
 routes/
 └── orders/
-    ├── [userId]/[orderId].ts → GET /orders/:userId/:orderId
+    ├── [userId]/[orderId].get.ts → GET /orders/:userId/:orderId
 ```
 
 ```ts title="routes/orders/[userId]/[orderId].ts"
-export const get = (req, res) => {
+export const handler = (req, res) => {
   const { userId, orderId } = req.params;
   res.json({ userId, orderId });
 };

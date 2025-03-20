@@ -43,8 +43,8 @@ routes/
      app.use(router);
      // highlight-end
 
-     app.listen(3000, () => {
-       console.log('Server is running on port 3000');
+     app.listen(6969, () => {
+       console.log('Server is running on port 6969');
      });
    };
 
@@ -68,6 +68,7 @@ routes/
 3. **Built-in features**: `file-express-router` comes with built-in support for route parameters, middleware, error handling, and more. You can take advantage of these features without having to write additional code.
 
    - 🚀 Automatic route registration
+   - 🎯 Automatic routes index file generation
    - 📂 Nested routes
    - 🔄 Dynamic route parameters
    - 🛡️ Middleware support
@@ -79,6 +80,7 @@ routes/
 
    - TypeScript support out of the box
    - Modular routes
+   - Easy to search, navigate, and maintain routes (grep friendly)
    - Easy to add, remove, and modify routes
    - Clear separation of concerns
    - Simple and intuitive API
@@ -89,15 +91,17 @@ routes/
 
 Define your routes in separate files and directories, and the library will automatically load and register them with Express.js without any additional configuration. This makes it easy to add, remove, and modify routes without having to touch your main application code.
 
-    ```ts title="routes/products/featured.ts"
+    ```ts title="routes/products/featured.get.ts"
     // Automatically available at: GET /products/featured
-    export const get = (req, res) => {
+    export const handler = (req, res) => {
         res.json({ featured: [] });
     };
+    ```
 
+    ```ts title="routes/products/featured.post.ts"
     // Automatically available at: POST /products/featured
-    export const post = (req, res) => {
-        res.status(405).json({ message: 'Method Not Allowed' });
+    export const handler = (req, res) => {
+        res.status(405).send('Method Not Allowed');
     };
     ```
 
@@ -105,9 +109,9 @@ Define your routes in separate files and directories, and the library will autom
 
 Easily define dynamic route parameters in your route files using square brackets `[]`. The library will automatically parse and extract these parameters from the request URL.
 
-    ```ts title="routes/users/[id].ts"
+    ```ts title="routes/users/[id].get.ts"
     // Automatically available at: GET /users/:id
-    export const get = (req, res) => {
+    export const handler = (req, res) => {
         const { id } = req.params;
         res.json({ id });
     };
@@ -117,7 +121,7 @@ Easily define dynamic route parameters in your route files using square brackets
 
 Apply middleware at the directory level to run middleware for all routes within that directory. This allows you to define common middleware for a group of routes without having to repeat it for each route.
 
-    ```ts title="routes/users/_middleware.ts"
+    ```ts title="routes/users/index.middleware.ts"
     // Middleware applied to all routes in the 'users' directory
     export const handler = (req, res, next) => {
         console.log('Middleware for all user routes');
@@ -129,7 +133,7 @@ Apply middleware at the directory level to run middleware for all routes within 
 
 Define error middleware to handle errors that occur during route processing. This allows you to centralize error handling logic and keep your route files clean and focused on route logic.
 
-    ```ts title="routes/_error.ts"
+    ```ts title="routes/index.error.ts"
     // Error middleware to handle errors
     export const handler = (err, req, res, next) => {
         console.error(err);

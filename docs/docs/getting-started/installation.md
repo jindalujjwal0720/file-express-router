@@ -67,9 +67,9 @@ npm init -y
 ```
 my-express-app/
 ├── routes/
-│   ├── status.ts
+│   ├── status.get.ts
 │   └── users/
-│       └── [id].ts
+│       └── [id].get.ts
 ├── app.ts
 └── package.json
 ```
@@ -78,6 +78,7 @@ my-express-app/
 
 ```typescript
 import express from 'express';
+import path from 'path';
 // highlight-next-line
 import { Router } from 'file-express-router';
 
@@ -85,40 +86,42 @@ const startServer = async () => {
   const app = express();
 
   // highlight-start
-  const routesDir = `${__dirname}/routes`;
+  const routesDir = path.join(__dirname, 'routes');
   const router = await Router({ dir: routesDir });
   app.use('/api', router);
   // highlight-end
 
-  app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+  app.listen(6969, () => {
+    console.log('Server is running on http://localhost:6969');
   });
 };
 
 startServer();
 ```
 
-5. Add a simple route in `routes/status.ts`:
+5. Add a simple route in `routes/status.get.ts`:
 
 ```typescript
 import { RequestHandler } from 'express';
 
-export const get: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (req, res) => {
   res.json({ message: 'Ping Pong!' });
 };
 ```
 
-6. Add a dynamic route in `routes/users/[id].ts`:
+6. Add a dynamic route in `routes/users/[id].get.ts`:
 
 ```typescript
 import { RequestHandler } from 'express';
 
-export const get: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (req, res) => {
   res.json({ userId: req.params.id });
 };
 ```
 
 7. Start your server:
+
+**Note:** If you are using **nodemon**, you have to ignore the `routes/index.ts` and `routes/index.js` files to prevent nodemon from restarting the server on file changes in the `routes` directory.
 
 ```bash
 npx ts-node app.ts
@@ -126,5 +129,5 @@ npx ts-node app.ts
 
 8. Test your routes:
 
-- Open http://localhost:3000/api/status in your browser or API client.
-- Open http://localhost:3000/api/users/123 in your browser or API client.
+- Open http://localhost:6969/api/status in your browser or API client.
+- Open http://localhost:6969/api/users/123 in your browser or API client.

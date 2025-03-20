@@ -10,6 +10,7 @@ interface RouterOptions {
   dir: string;
   /**
    * Whether to log requests or not.
+   * @default true
    */
   logger?: boolean;
   /**
@@ -23,18 +24,13 @@ interface RouterOptions {
    */
   router?: {
     /**
-     * The base path for the router.
-     * @default '/api'
-     */
-    base?: string;
-    /**
      * Whether to use require instead of import.
      * @default false
      */
     require?: boolean;
     /**
      * Whether to generate TypeScript code.
-     * @default false
+     * @default true
      */
     ts?: boolean;
   };
@@ -45,9 +41,8 @@ export let GLOBAL_OPTIONS: RouterOptions = {
   logger: true,
   include: ['.ts', '.js'],
   router: {
-    base: '/api',
     require: false,
-    ts: false,
+    ts: true,
   },
 };
 

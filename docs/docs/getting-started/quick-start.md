@@ -33,9 +33,9 @@ Create the following folder structure:
 ```
 my-express-app/
 ├── routes/
-│   ├── status.ts
+│   ├── status.get.ts
 │   └── users/
-│       └── [id].ts
+│       └── [id].get.ts
 ├── app.ts
 └── package.json
 ```
@@ -46,6 +46,7 @@ Add the following code to `app.ts`:
 
 ```typescript title="app.ts"
 import express from 'express';
+import path from 'path';
 // highlight-next-line
 import { Router } from 'file-express-router';
 
@@ -53,13 +54,13 @@ const startServer = async () => {
   const app = express();
 
   // highlight-start
-  const routesDir = `${__dirname}/routes`;
+  const routesDir = path.join(__dirname, 'routes');
   const router = await Router({ dir: routesDir });
   app.use('/api', router);
   // highlight-end
 
-  app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+  app.listen(6969, () => {
+    console.log('Server is running on http://localhost:6969');
   });
 };
 
@@ -68,18 +69,18 @@ startServer();
 
 ## Step 4: Create Routes
 
-```typescript title="routes/status.ts"
+```typescript title="routes/status.get.ts"
 import { RequestHandler } from 'express';
 
-export const get: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (req, res) => {
   res.json({ message: 'Ping Pong!' });
 };
 ```
 
-```typescript title="routes/users/[id].ts"
+```typescript title="routes/users/[id].get.ts"
 import { RequestHandler } from 'express';
 
-export const get: RequestHandler = (req, res) => {
+export const handler: RequestHandler = (req, res) => {
   res.json({ userId: req.params.id });
 };
 ```
@@ -92,11 +93,13 @@ Run the following command to start your Express server:
 npx ts-node app.ts
 ```
 
+**Note:** If you are using **nodemon**, you have to ignore the `routes/index.ts` and `routes/index.js` files to prevent nodemon from restarting the server on file changes in the `routes` directory.
+
 ## Step 6: Test Your API
 
 Use a browser or API client to test the routes:
 
-- `GET http://localhost:3000/api/status` → `{ "message": "Ping Pong!" }`
-- `GET http://localhost:3000/api/users/123` → `{ "userId": "123" }`
+- `GET http://localhost:6969/api/status` → `{ "message": "Ping Pong!" }`
+- `GET http://localhost:6969/api/users/123` → `{ "userId": "123" }`
 
 That's it! You have successfully set up `file-express-router` in your Node.js project.

@@ -4,15 +4,17 @@ In `file-express-router`, HTTP method handlers allow you to define how your rout
 
 ## Defining HTTP Method Handlers
 
-In each route file, you can define methods such as `get`, `post`, `put`, and `delete` to handle requests for the corresponding HTTP methods. The handler functions receive the same parameters as in standard Express.js route handlers: `req`, `res`, and `next`.
+In each route file, you define a `handler` function for each HTTP method you want to support. This handler function is of the `RequestHandler` type, which is provided by the `express` library.
 
-```ts title="routes/products/featured.ts"
-export const get = (req, res) => {
+```ts title="routes/products/featured.get.ts"
+export const handler = (req, res) => {
   res.json({ featured: [] });
 };
+```
 
-export const post = (req, res) => {
-  res.status(405).json({ message: 'Method Not Allowed' });
+```ts title="routes/products/featured.post.ts"
+export const handler = (req, res) => {
+  res.status(405).send('Method Not Allowed');
 };
 ```
 
@@ -22,33 +24,40 @@ In the above example, the `GET /products/featured` route returns a list of featu
 
 You can define handlers for the following HTTP methods:
 
-- **GET**
-- **POST**
-- **PUT**
-- **DELETE** (use `del` as an alias as `delete` is a reserved keyword)
-- **PATCH**
+- **GET** (.get)
+- **POST** (.post)
+- **PUT** (.put)
+- **DELETE** (.delete)
+- **PATCH** (.patch)
+- **HEAD** (.head)
+- **OPTIONS** (.options)
+- **Pre Middleware** (.middleware)
+- **Post Middleware** (.error)
 
-Each handler corresponds to a specific HTTP request type, which helps to keep the logic for each type of operation well-defined and separate.
+Each file handler corresponds to a specific HTTP request type, which helps to keep the logic for each type of operation well-defined and separate.
 
 ## Handling Multiple Methods
 
-You can handle multiple methods in the same file by exporting handlers for different HTTP methods. This is useful when you want to manage multiple actions for a specific resource.
+You can handle multiple methods by creating separate files for each method in the same route directory. The library will automatically load the appropriate handler based on the incoming request method.
 
-```ts title="routes/products/[id].ts"
-export const get = (req, res) => {
+```ts title="routes/products/[id].get.ts"
+export const handler = (req, res) => {
   const { id } = req.params;
   res.json({ id });
 };
+```
 
-export const put = (req, res) => {
+```ts title="routes/products/[id].put.ts"
+export const handler = (req, res) => {
   const { id } = req.params;
-  res.json({ updated: true, id });
+  res.json({ updatedId: id });
 };
+```
 
-// Alias for DELETE method
-export const del = (req, res) => {
+```ts title="routes/products/[id].delete.ts"
+export const handler = (req, res) => {
   const { id } = req.params;
-  res.json({ deleted: true, id });
+  res.json({ deletedId: id });
 };
 ```
 
@@ -58,13 +67,15 @@ In this example, the `GET`, `PUT`, and `DELETE` handlers for `/products/:id` all
 
 For routes with dynamic parameters, you can use HTTP method handlers in conjunction with route parameters. The parameters are automatically parsed by the library and passed to the route handler via `req.params`.
 
-```ts title="routes/users/[id].ts"
-export const get = (req, res) => {
+```ts title="routes/users/[id].get.ts"
+export const handler = (req, res) => {
   const { id } = req.params;
   res.json({ user: id });
 };
+```
 
-export const put = (req, res) => {
+```ts title="routes/users/[id].put.ts"
+export const handler = (req, res) => {
   const { id } = req.params;
   res.json({ updatedUser: id });
 };
@@ -76,8 +87,8 @@ Here, the `GET` and `PUT` methods for `/users/:id` allow retrieving and updating
 
 The HTTP method handlers can send responses in various formats, including JSON, HTML, plain text, and more. You can use the `res` object to set the response status, headers, and body as needed.
 
-```ts title="routes/health.ts"
-export const get = (req, res) => {
+```ts title="routes/health.get.ts"
+export const handler = (req, res) => {
   res.status(200).json({ status: 'OK' });
 };
 ```

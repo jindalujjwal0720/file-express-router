@@ -1,5 +1,5 @@
-const get = (req, res) => {
+const handler = (req, res) => {
   res.send('JS file is also allowed');
 };
 
-module.exports = { get };
+module.exports = { handler };
