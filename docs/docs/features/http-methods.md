@@ -7,13 +7,13 @@ In `file-express-router`, HTTP method handlers allow you to define how your rout
 In each route file, you define a `handler` function for each HTTP method you want to support. This handler function is of the `RequestHandler` type, which is provided by the `express` library.
 
 ```ts title="routes/products/featured.get.ts"
-export const handler = (req, res) => {
+export default (req, res) => {
   res.json({ featured: [] });
 };
 ```
 
 ```ts title="routes/products/featured.post.ts"
-export const handler = (req, res) => {
+export default (req, res) => {
   res.status(405).send('Method Not Allowed');
 };
 ```
@@ -41,21 +41,21 @@ Each file handler corresponds to a specific HTTP request type, which helps to ke
 You can handle multiple methods by creating separate files for each method in the same route directory. The library will automatically load the appropriate handler based on the incoming request method.
 
 ```ts title="routes/products/[id].get.ts"
-export const handler = (req, res) => {
+export default (req, res) => {
   const { id } = req.params;
   res.json({ id });
 };
 ```
 
 ```ts title="routes/products/[id].put.ts"
-export const handler = (req, res) => {
+export default (req, res) => {
   const { id } = req.params;
   res.json({ updatedId: id });
 };
 ```
 
 ```ts title="routes/products/[id].delete.ts"
-export const handler = (req, res) => {
+export default (req, res) => {
   const { id } = req.params;
   res.json({ deletedId: id });
 };
@@ -68,14 +68,14 @@ In this example, the `GET`, `PUT`, and `DELETE` handlers for `/products/:id` all
 For routes with dynamic parameters, you can use HTTP method handlers in conjunction with route parameters. The parameters are automatically parsed by the library and passed to the route handler via `req.params`.
 
 ```ts title="routes/users/[id].get.ts"
-export const handler = (req, res) => {
+export default (req, res) => {
   const { id } = req.params;
   res.json({ user: id });
 };
 ```
 
 ```ts title="routes/users/[id].put.ts"
-export const handler = (req, res) => {
+export default (req, res) => {
   const { id } = req.params;
   res.json({ updatedUser: id });
 };
@@ -88,7 +88,7 @@ Here, the `GET` and `PUT` methods for `/users/:id` allow retrieving and updating
 The HTTP method handlers can send responses in various formats, including JSON, HTML, plain text, and more. You can use the `res` object to set the response status, headers, and body as needed.
 
 ```ts title="routes/health.get.ts"
-export const handler = (req, res) => {
+export default (req, res) => {
   res.status(200).json({ status: 'OK' });
 };
 ```

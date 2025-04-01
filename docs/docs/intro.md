@@ -93,14 +93,14 @@ Define your routes in separate files and directories, and the library will autom
 
     ```ts title="routes/products/featured.get.ts"
     // Automatically available at: GET /products/featured
-    export const handler = (req, res) => {
+    export default (req, res) => {
         res.json({ featured: [] });
     };
     ```
 
     ```ts title="routes/products/featured.post.ts"
     // Automatically available at: POST /products/featured
-    export const handler = (req, res) => {
+    export default (req, res) => {
         res.status(405).send('Method Not Allowed');
     };
     ```
@@ -111,7 +111,7 @@ Easily define dynamic route parameters in your route files using square brackets
 
     ```ts title="routes/users/[id].get.ts"
     // Automatically available at: GET /users/:id
-    export const handler = (req, res) => {
+    export default (req, res) => {
         const { id } = req.params;
         res.json({ id });
     };
@@ -123,7 +123,7 @@ Apply middleware at the directory level to run middleware for all routes within 
 
     ```ts title="routes/users/index.middleware.ts"
     // Middleware applied to all routes in the 'users' directory
-    export const handler = (req, res, next) => {
+    export default (req, res, next) => {
         console.log('Middleware for all user routes');
         next();
     };
@@ -135,7 +135,7 @@ Define error middleware to handle errors that occur during route processing. Thi
 
     ```ts title="routes/index.error.ts"
     // Error middleware to handle errors
-    export const handler = (err, req, res, next) => {
+    export default (err, req, res, next) => {
         console.error(err);
         res.status(500).json({ message: 'Internal Server Error' });
     };

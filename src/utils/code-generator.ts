@@ -21,8 +21,8 @@ export class CodeGenerator {
     // Remove file extension and convert backslashes to forward slashes
     file = file.replace(/\\/g, '/').replace(/\.[^.]+$/, '');
     return GLOBAL_OPTIONS.router?.require
-      ? `const { handler as ${name} } = require('./${file}');`
-      : `import { handler as ${name} } from './${file}';`;
+      ? `const ${name} = require('./${file}');`
+      : `import ${name} from './${file}';`;
   }
 
   getExportDefaultCode(name: string): string {

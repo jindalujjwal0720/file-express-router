@@ -6,4 +6,4 @@ const handleGetHome = async (req: Request, res: Response) => {
   res.json({ path, message: 'Hello World!' });
 };
 
-export const handler = handleGetHome;
+export default handleGetHome;

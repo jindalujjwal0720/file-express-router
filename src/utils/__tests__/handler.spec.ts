@@ -99,12 +99,12 @@ describe('CodeGenerator', () => {
   describe('getImportCode', () => {
     it('should generate ES module import statement', () => {
       const result = codeGenerator.getImportCode('userHandler', 'users/get');
-      expect(result).toBe("import { handler as userHandler } from './users/get';");
+      expect(result).toBe("import userHandler from './users/get';");
     });
     
     it('should normalize file paths', () => {
       const result = codeGenerator.getImportCode('userHandler', 'users\\get.js');
-      expect(result).toBe("import { handler as userHandler } from './users/get';");
+      expect(result).toBe("import userHandler from './users/get';");
     });
   });
   

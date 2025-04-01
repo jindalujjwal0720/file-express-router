@@ -100,9 +100,11 @@ Inside the `routes` directory, create an `index.get.ts` file with a simple route
 ```typescript title="routes/index.get.ts"
 import { RequestHandler } from 'express';
 
-export const handler: RequestHandler = (req, res) => {
+const handler: RequestHandler = (req, res) => {
   res.json({ message: 'Welcome to the Basic API Server!' });
 };
+
+export default handler;
 ```
 
 This will handle `GET` requests to `/api/`.
@@ -114,9 +116,11 @@ Inside the `routes/users` directory, create a `[id].get.ts` file to handle dynam
 ```typescript title="routes/users/[id].get.ts"
 import { RequestHandler } from 'express';
 
-export const handler: RequestHandler = (req, res) => {
+const handler: RequestHandler = (req, res) => {
   res.json({ userId: req.params.id });
 };
+
+export default handler;
 ```
 
 This will handle `GET` requests to `/api/users/:id`.
@@ -156,10 +160,12 @@ To add middleware, create a `index.middleware.ts` file in any directory. For exa
 ```typescript title="routes/users/index.middleware.ts"
 import { RequestHandler } from 'express';
 
-export const handler: RequestHandler = (req, res, next) => {
+const handler: RequestHandler = (req, res, next) => {
   console.log('Middleware running for /api/users routes');
   next();
 };
+
+export default handler;
 ```
 
 This middleware will run for all routes under `/api/users`.
@@ -171,9 +177,11 @@ To handle errors, create an `index.error.ts` file in any directory. For example,
 ```typescript title="routes/index.error.ts"
 import { ErrorRequestHandler } from 'express';
 
-export const handler: ErrorRequestHandler = (err, req, res, next) => {
+const handler: ErrorRequestHandler = (err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 };
+
+export default handler;
 ```
 
 ## Final Project Structure

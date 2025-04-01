@@ -72,17 +72,21 @@ startServer();
 ```typescript title="routes/status.get.ts"
 import { RequestHandler } from 'express';
 
-export const handler: RequestHandler = (req, res) => {
+const handler: RequestHandler = (req, res) => {
   res.json({ message: 'Ping Pong!' });
 };
+
+export default handler;
 ```
 
 ```typescript title="routes/users/[id].get.ts"
 import { RequestHandler } from 'express';
 
-export const handler: RequestHandler = (req, res) => {
+const handler: RequestHandler = (req, res) => {
   res.json({ userId: req.params.id });
 };
+
+export default handler;
 ```
 
 ## Step 5: Start Your Server

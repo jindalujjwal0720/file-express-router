@@ -9,7 +9,7 @@ You can apply middleware to all routes within a specific directory by placing a 
 Example:
 
 ```ts title="routes/users/index.middleware.ts"
-export const handler = (req, res, next) => {
+export default (req, res, next) => {
   console.log('Middleware applied to all user routes');
   next();
 };
@@ -22,7 +22,7 @@ Error middlewares are just like regular middlewares, but they have an additional
 Example:
 
 ```ts title="routes/index.error.ts"
-export const handler = (err, req, res, next) => {
+export default (err, req, res, next) => {
   console.error('Error occurred:', err);
   res.status(500).json({ message: 'Internal Server Error' });
 };
@@ -47,20 +47,20 @@ const authorize = (req, res, next) => {
   next();
 };
 
-export const handler = [authenticate, authorize];
+export default [authenticate, authorize];
 ```
 
 Example using separate middleware files:
 
 ```ts title="routes/users/authenticate.middleware.ts"
-export const handler = (req, res, next) => {
+export default (req, res, next) => {
   console.log('Authenticating user...');
   next();
 };
 ```
 
 ```ts title="routes/users/authorize.middleware.ts"
-export const handler = (req, res, next) => {
+export default (req, res, next) => {
   console.log('Authorizing user...');
   next();
 };

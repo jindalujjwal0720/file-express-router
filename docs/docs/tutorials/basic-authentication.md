@@ -110,7 +110,7 @@ export const verifyToken = (token: string): { userId: string } | null => {
 import { RequestHandler } from 'express';
 import { verifyToken } from '../../utils/auth';
 
-export const handler: RequestHandler = (req, res, next) => {
+const handler: RequestHandler = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
@@ -127,6 +127,8 @@ export const handler: RequestHandler = (req, res, next) => {
   req.userId = decoded.userId;
   next();
 };
+
+export default handler;
 ```
 
 ### Step 6: Create Authentication Routes
@@ -138,7 +140,7 @@ import { hashPassword } from '../../utils/auth';
 // In-memory "database" for demonstration purposes
 const users: { [key: string]: { password: string } } = {};
 
-export const handler: RequestHandler = async (req, res) => {
+const handler: RequestHandler = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -156,6 +158,8 @@ export const handler: RequestHandler = async (req, res) => {
 
   res.status(201).json({ message: 'User registered successfully' });
 };
+
+export default handler;
 ```
 
 ```typescript title="routes/auth/login.post.ts"
@@ -167,7 +171,7 @@ const users: { [key: string]: { password: string } } = {
   admin: { password: '$2b$10$...' }, // Replace with a real hashed password
 };
 
-export const handler: RequestHandler = async (req, res) => {
+const handler: RequestHandler = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -185,6 +189,8 @@ export const handler: RequestHandler = async (req, res) => {
   const token = generateToken(username);
   res.json({ token });
 };
+
+export default handler;
 ```
 
 ### Step 7: Update app.ts

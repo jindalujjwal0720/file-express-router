@@ -10,4 +10,4 @@ const authenticate = async (
   next();
 };
 
-export const handler = authenticate;
+export default authenticate;

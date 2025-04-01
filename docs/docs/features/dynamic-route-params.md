@@ -16,7 +16,7 @@ routes/
 ```
 
 ```ts title="routes/users/[id].get.ts"
-export const handler = (req, res) => {
+export default (req, res) => {
   const { id } = req.params;
   res.json({ userId: id });
 };
@@ -33,7 +33,7 @@ routes/
 ```
 
 ```ts title="routes/orders/[userId]/[orderId].ts"
-export const handler = (req, res) => {
+export default (req, res) => {
   const { userId, orderId } = req.params;
   res.json({ userId, orderId });
 };

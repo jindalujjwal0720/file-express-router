@@ -104,9 +104,11 @@ startServer();
 ```typescript
 import { RequestHandler } from 'express';
 
-export const handler: RequestHandler = (req, res) => {
+const handler: RequestHandler = (req, res) => {
   res.json({ message: 'Ping Pong!' });
 };
+
+export default handler;
 ```
 
 6. Add a dynamic route in `routes/users/[id].get.ts`:
@@ -114,9 +116,11 @@ export const handler: RequestHandler = (req, res) => {
 ```typescript
 import { RequestHandler } from 'express';
 
-export const handler: RequestHandler = (req, res) => {
+const handler: RequestHandler = (req, res) => {
   res.json({ userId: req.params.id });
 };
+
+export default handler;
 ```
 
 7. Start your server:
