@@ -338,9 +338,12 @@ describe('CodeGenerator', () => {
       
       const code = codeGenerator.generateExpressRouterCode('router', middlewareRoute);
       
-      expect(code).toContain('router.use(\'/users\'');
-      expect(code).toContain('router.use(authMiddleware);');
-      expect(code).toContain('router.use(errorHandler);');
+      // 'a' is the unique name generated for the sub-router
+      expect(code).toContain('const a = Router({ mergeParams: true });');
+      expect(code).toContain('a.use(authMiddleware);');
+      expect(code).toContain('a.get(\'/\', indexHandler);');
+      expect(code).toContain('a.use(errorHandler);');
+      expect(code).toContain('router.use(\'/users\', a);');
     });
     
     it('should skip middleware method in end routes', () => {

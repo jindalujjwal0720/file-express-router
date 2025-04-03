@@ -55,17 +55,17 @@ export class CodeGenerator {
       return `${routerName}.${route.method}('${route.name}', ${route.handler});`;
     } else {
       const subRouterInfo = `// ${getRelativePath(route.file, GLOBAL_OPTIONS.dir) || '(root)'}`;
+      const subRouterName = this.nameGenerator.next();
 
       // Generate code for middlewares
       const preMiddlewaresCode = route.preMiddlewares
-        .map((middleware) => `${routerName}.use(${middleware});`)
+        .map((middleware) => `${subRouterName}.use(${middleware});`)
         .join('\n');
 
       const postMiddlewaresCode = route.postMiddlewares
-        .map((middleware) => `${routerName}.use(${middleware});`)
+        .map((middleware) => `${subRouterName}.use(${middleware});`)
         .join('\n');
 
-      const subRouterName = this.nameGenerator.next();
       const subRouterCreationCode = `const ${subRouterName} = Router({ mergeParams: true });`;
       const subRouterCode = route.children
         .map((child) => this.generateExpressRouterCode(subRouterName, child))
@@ -78,9 +78,9 @@ export class CodeGenerator {
         subRouterInfo,
         subRouterCreationCode,
         preMiddlewaresCode,
-        routerUseCode,
         subRouterCode,
         postMiddlewaresCode,
+        routerUseCode,
         '',
       ].join('\n');
     }
@@ -140,7 +140,6 @@ export class CodeGenerator {
     parent?: MiddlewareRoute,
   ): Promise<Route[]> {
     const routes: Route[] = [];
-
     try {
       for (const entry of entries) {
         if (entry.type === 'file') {
